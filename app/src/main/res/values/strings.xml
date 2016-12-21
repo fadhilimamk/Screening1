@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Screening</string>
+    <string name="dummy_name">Nauvwevwevwe Osas</string>
+
+    <string name="et_name_placeholder">Masukan nama anda</string>
+
+    <string name="tv_nama">Nama : </string>
+
+    <string name="btn_next">Next</string>
+    <string name="btn_select_event">Pilih Event</string>
+    <string name="btn_select_guest">Pilih Guest</string>
+</resources>
