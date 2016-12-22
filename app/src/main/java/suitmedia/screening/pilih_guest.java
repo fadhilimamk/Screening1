@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,31 +21,63 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class pilih_guest extends AppCompatActivity {
+public class pilih_guest extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     GridView gv_select_guest;
+    SwipeRefreshLayout srl_guest_grid;
     List<Person> guesttLists;
     private static String url = "http://dry-sierra-6832.herokuapp.com/api/people";
-    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pilih_guest);
         gv_select_guest = (GridView) findViewById(R.id.gridView);
-        guesttLists = new ArrayList<Person>();
-        new GetGuests().execute();
+        srl_guest_grid = (SwipeRefreshLayout) findViewById(R.id.srl_guest_grid);
+                guesttLists = new ArrayList<Person>();
+
+        srl_guest_grid.setOnRefreshListener(this);
+        srl_guest_grid.post(new Runnable() {
+            @Override
+            public void run() {
+                srl_guest_grid.setRefreshing(true);
+                new GetGuests().execute();
+            }
+        });
+
 
         gv_select_guest.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getApplicationContext(), guesttLists.get(i).getPhone(),
+                Person choosen = guesttLists.get(i);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(choosen.birthday);
+                int bulan = cal.get(Calendar.MONTH);
+                Toast.makeText(getApplicationContext(), choosen.getPhone() +" | "+ ( (isPrima(bulan))?"Bulan prima":"Bulan komposit" ),
                         Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private Boolean isPrima(int val){
+        Boolean prima = (val>1);
+        int i = 2;
+        while((i*i<=val) && (prima)){
+            if(val % i == 0)
+                prima = false;
+            else
+                i++;
+        }
+        return prima;
+    }
+
+    @Override
+    public void onRefresh() {
+        new GetGuests().execute();
     }
 
     private class GetGuests extends AsyncTask<Void, Void, Void> {
@@ -52,10 +85,6 @@ public class pilih_guest extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             Log.e("JSON", "Mengambil JSON");
-            pd = new ProgressDialog(pilih_guest.this);
-            pd.setMessage("Mengambil data ...");
-            pd.setCancelable(false);
-            pd.show();
         }
 
         @Override
@@ -117,8 +146,7 @@ public class pilih_guest extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            if (pd.isShowing())
-                pd.dismiss();
+            srl_guest_grid.setRefreshing(false);
             GuestAdapter adapter = new GuestAdapter(pilih_guest.this,guesttLists);
             gv_select_guest.setAdapter(adapter);
         }

@@ -9,12 +9,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="suitmedia.screening.pilih_guest">
 
-    <GridView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/gridView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:numColumns="2" />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_guest_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <GridView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gridView"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:numColumns="2" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 </RelativeLayout>

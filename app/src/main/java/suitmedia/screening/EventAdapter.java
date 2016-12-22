@@ -47,6 +47,7 @@ public class EventAdapter extends BaseAdapter {
         ImageView imageEvent;
         TextView txtNamaEvent;
         TextView txtTanggalEvent;
+        TextView txtDesc;
     }
 
     @Override
@@ -60,6 +61,7 @@ public class EventAdapter extends BaseAdapter {
             holder.imageEvent = (ImageView) view.findViewById(R.id.iv_foto_event);
             holder.txtNamaEvent = (TextView) view.findViewById(R.id.tv_nama_event);
             holder.txtTanggalEvent = (TextView) view.findViewById(R.id.tv_tanggal_event);
+            holder.txtDesc = (TextView) view.findViewById(R.id.tv_desc);
             view.setTag(holder);
         }else{
             holder = (ViewHolder) view.getTag();
@@ -69,8 +71,11 @@ public class EventAdapter extends BaseAdapter {
 
         holder.imageEvent.setImageResource(eventItem.imageId);
         holder.txtNamaEvent.setText(eventItem.nama);
-        DateFormat df = new SimpleDateFormat("dd MMMM yyy");
+        DateFormat df = new SimpleDateFormat("MMM dd yyyy");
         holder.txtTanggalEvent.setText(df.format(eventItem.tanggal));
+        String diskripsi = (eventItem.desc.length() > 100) ? eventItem.desc.substring(0,100)+"..." : eventItem.desc;
+        holder.txtDesc.setText(diskripsi);
+
 
         return view;
     }

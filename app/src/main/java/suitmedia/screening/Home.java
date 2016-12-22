@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class Home extends AppCompatActivity {
 
@@ -23,13 +24,29 @@ public class Home extends AppCompatActivity {
                 if(et_name.getText().toString().trim().equals("")){
                     et_name.setError("Masukkan nama terlebih dahulu");
                 }else{
+                    Toast.makeText(getApplicationContext(), (isPalindrom(et_name.getText().toString())?"isPalindrom":"not palindrom"),
+                            Toast.LENGTH_SHORT).show();
+
                     Intent i = new Intent(getApplicationContext(),MainActivity.class);
                     i.putExtra("NAMA",et_name.getText().toString());
                     startActivity(i);
                 }
             }
         });
-
-
     }
+
+    private Boolean isPalindrom (String str){
+        Boolean palindrom = true;
+        int length = str.length();
+        int i = 0;
+        while(i<Math.sqrt(length) && palindrom){
+            if(str.charAt(i)==str.charAt(length-i-1))
+                i++;
+            else
+                palindrom = false;
+        }
+
+        return palindrom;
+    }
+
 }
